@@ -61,7 +61,10 @@ extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN EV */
-
+extern CAN_TxHeaderTypeDef pHeader;
+extern CAN_RxHeaderTypeDef pRxHeader;
+extern uint32_t TxMailbox;
+extern uint8_t a,r;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -166,11 +169,17 @@ void DebugMon_Handler(void)
 void EXTI0_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_IRQn 0 */
-
+  //This peice of code is for debouncing the mechanical contact of the switch and/or eliminating any external glitch
+  for (int n=0;n<1000000;n++); //this loop is used to make a software delay, remove optimization for this to work
+  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0)) //check to ensure pin is pressed
+	{
+		a++; //increment a
+		HAL_CAN_AddTxMessage(&hcan1, &pHeader, &a, &TxMailbox);  //function to add message for transmition
+	}
   /* USER CODE END EXTI0_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
   /* USER CODE BEGIN EXTI0_IRQn 1 */
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
@@ -184,7 +193,8 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
-
+  HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &pRxHeader, &r);
+  GPIOD->ODR=r<<12; //use output data register to turn on LEDs
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 

@@ -54,7 +54,11 @@ osThreadId defaultTaskHandle;
 uint32_t defaultTaskBuffer[ 128 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 /* USER CODE BEGIN PV */
-
+CAN_TxHeaderTypeDef pHeader; //declare a specific header for message transmittions
+CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
+uint32_t TxMailbox;
+uint8_t a,r; //declare byte to be transmitted //declare a receive byte
+CAN_FilterTypeDef sFilterConfig; //declare CAN filter structure
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,7 +112,25 @@ int main(void)
   MX_SPI1_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
+  pHeader.DLC=1; //give message size of 1 byte
+  pHeader.IDE=CAN_ID_STD; //set identifier to standard
+  pHeader.RTR=CAN_RTR_DATA; //set data type to remote transmission request?
+  pHeader.StdId=0x244; //define a standard identifier, used for message identification by filters (switch this for the other microcontroller)
 
+  //filter one (stack light blink)
+  sFilterConfig.FilterFIFOAssignment=CAN_FILTER_FIFO0; //set fifo assignment
+  sFilterConfig.FilterIdHigh=0x245<<5; //the ID that the filter looks for (switch this for the other microcontroller)
+  sFilterConfig.FilterIdLow=0;
+  sFilterConfig.FilterMaskIdHigh=0;
+  sFilterConfig.FilterMaskIdLow=0;
+  sFilterConfig.FilterScale=CAN_FILTERSCALE_32BIT; //set filter scale
+  sFilterConfig.FilterActivation=ENABLE;
+
+  HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig); //configure CAN filter
+
+
+  HAL_CAN_Start(&hcan1); //start CAN
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //enable interrupts
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -218,11 +240,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 16;
+  hcan1.Init.Prescaler = 420;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_12TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
