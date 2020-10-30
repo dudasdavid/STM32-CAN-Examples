@@ -1,9 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
 CAN1.BS1=CAN_BS1_12TQ
-CAN1.BS2=CAN_BS2_4TQ
-CAN1.CalculateTimeQuantum=10000.0
+CAN1.BS2=CAN_BS2_5TQ
+CAN1.CalculateTimeQuantum=111.11111111111111
 CAN1.IPParameters=CalculateTimeQuantum,Prescaler,BS1,BS2
-CAN1.Prescaler=360
+CAN1.Prescaler=4
 FREERTOS.IPParameters=Tasks01,configUSE_RECURSIVE_MUTEXES,configUSE_COUNTING_SEMAPHORES,configUSE_APPLICATION_TASK_TAG,configTOTAL_HEAP_SIZE,configUSE_IDLE_HOOK,configUSE_MALLOC_FAILED_HOOK,configCHECK_FOR_STACK_OVERFLOW
 FREERTOS.Tasks01=defaultTask,0,4096,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL
 FREERTOS.configCHECK_FOR_STACK_OVERFLOW=2

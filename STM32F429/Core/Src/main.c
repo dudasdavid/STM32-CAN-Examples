@@ -118,11 +118,11 @@ int main(void)
   pHeader.DLC=1; //give message size of 1 byte
   pHeader.IDE=CAN_ID_STD; //set identifier to standard
   pHeader.RTR=CAN_RTR_DATA; //set data type to remote transmission request?
-  pHeader.StdId=0x244; //define a standard identifier, used for message identification by filters (switch this for the other microcontroller)
+  pHeader.StdId=0x245; //define a standard identifier, used for message identification by filters (switch this for the other microcontroller)
 
   //filter one (stack light blink)
   sFilterConfig.FilterFIFOAssignment=CAN_FILTER_FIFO0; //set fifo assignment
-  sFilterConfig.FilterIdHigh=0x245<<5; //the ID that the filter looks for (switch this for the other microcontroller)
+  sFilterConfig.FilterIdHigh=0x244<<5; //the ID that the filter looks for (switch this for the other microcontroller)
   sFilterConfig.FilterIdLow=0;
   sFilterConfig.FilterMaskIdHigh=0;
   sFilterConfig.FilterMaskIdLow=0;
@@ -235,11 +235,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 360;
+  hcan1.Init.Prescaler = 4;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_12TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_5TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;

@@ -179,7 +179,7 @@ void EXTI0_IRQHandler(void)
   /* USER CODE END EXTI0_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
   /* USER CODE BEGIN EXTI0_IRQn 1 */
-
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
@@ -194,7 +194,8 @@ void CAN1_RX0_IRQHandler(void)
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
   HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &pRxHeader, &r);
-  GPIOD->ODR=r<<12; //use output data register to turn on LEDs
+  //GPIOD->ODR=r<<12; //use output data register to turn on LEDs
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
